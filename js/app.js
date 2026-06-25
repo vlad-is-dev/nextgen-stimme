@@ -244,7 +244,7 @@
       '<div class="reader-actions">' +
         '<button class="ract' + (saved ? ' on' : '') + '" data-save="' + a.id + '"><svg viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></svg>' + (saved ? 'Gemerkt' : 'Merken') + '</button>' +
         '<button class="ract" data-speak="1"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 010 6"/></svg>Vorlesen</button>' +
-        '<button class="ract" data-toast="Geteilt"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Teilen</button>' +
+        '<button class="ract" data-share="1"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Teilen</button>' +
       '</div>' +
       digestHtml(a) +
       '<div class="reader-body">' + a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join("") + '</div>' +
@@ -263,7 +263,18 @@
     window.speechSynthesis.speak(u);
     toast("Vorlesen gestartet 🔊");
   }
-
+function shareArticle() {
+    var a = findArticle(state.currentArticleId);
+    if (!a) return;
+    var data = { title: "NeXtGen Stimme", text: a.title + " — " + a.dek, url: location.href };
+    if (navigator.share) {
+      navigator.share(data).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(a.title + " — " + location.href).then(function () { toast("Link kopiert 🔗"); });
+    } else {
+      toast("Teilen hier nicht verfügbar");
+    }
+  }
   /* ================= PROFILE ================= */
   function renderProfileInterests() {
     var box = $("#pfInterests");
@@ -511,6 +522,7 @@
     if ((el = e.target.closest("[data-next]"))) { if (currentSub) { NGS.Live.unsubscribe(currentSub); currentSub = null; } state.pulseIndex++; buildCard(); go("pulse"); return; }
     if ((el = e.target.closest("[data-toast]"))) { toast(el.dataset.toast); return; }
     if ((el = e.target.closest("[data-speak]"))) { speakArticle(); return; }
+    if ((el = e.target.closest("[data-share]"))) { shareArticle(); return; }
     if ((el = e.target.closest("[data-clear]"))) { state.selectedTopics = {}; renderFilterBar(); renderFeed(); var pf = $("#pfInterests"); if (pf) renderProfileInterests(); return; }
     if ((el = e.target.closest("[data-onb]"))) {
       var k = el.dataset.onb;

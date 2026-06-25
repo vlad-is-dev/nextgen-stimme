@@ -488,3 +488,26 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .vote-count .live{color:var(--coral)}
 .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--coral);margin-right:5px;vertical-align:middle;animation:livepulse 1.4s infinite}
 @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* ============================================================
+   MOBILE: on real phones drop the device mockup and go fullscreen
+   (the framed "phone on a desk" look is only for desktop/portfolio)
+   ============================================================ */
+@media (max-width: 540px){
+  body{
+    padding:0;
+    display:block;
+    background:var(--paper);
+  }
+  .device{
+    max-width:none;
+    width:100%;
+    height:100dvh;
+    min-height:100dvh;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+  }
+  .notch{display:none}
+  .topbar{padding-top:max(18px, env(safe-area-inset-top))}
+  .landing{padding-top:max(46px, calc(env(safe-area-inset-top) + 26px))}
+}
