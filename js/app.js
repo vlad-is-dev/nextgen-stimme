@@ -20,6 +20,7 @@
     currentArticleId: null,
     onboarded: false,
     streak: 1,
+    quizDone: false,
     settings: { push: true, sound: false }
   };
 
@@ -42,11 +43,12 @@
     if (name === "feed" && !state.onboarded) name = "onboarding";
     $all(".screen").forEach(function (s) { s.classList.toggle("active", s.id === "screen-" + name); });
     showShell(name !== "landing" && name !== "onboarding");
-    var tabName = (name === "onboarding" || name === "saved" || name === "article") ? "feed" : name;
+    var tabName = (name === "onboarding" || name === "saved" || name === "article" || name === "quiz") ? "feed" : name;
     $all(".tab").forEach(function (t) { t.classList.toggle("active", t.dataset.tab === tabName); });
     if (name === "feed") { renderFilterBar(); renderFeed(); }
     if (name === "onboarding") renderOnboarding();
     if (name === "saved") renderSaved();
+    if (name === "quiz") renderQuiz();
     if (name === "pulse") ensureDeck();
     if (name === "profile") renderProfile();
     $("#screens").scrollTop = 0;
@@ -140,6 +142,8 @@
     $("#greetTitle").textContent = greeting();
     var sc = $("#streakChip");
     if (sc) sc.innerHTML = '<span class="flame">🔥</span> ' + state.streak + ' Tag' + (state.streak === 1 ? '' : 'e') + ' Streak · komm täglich für deinen Puls';
+    var qs = $("#quizCardSub");
+    if (qs) qs.textContent = state.quizDone ? "✓ heute erledigt — nochmal üben?" : (NGS.QUIZ.length + " Fragen · bis zu " + (NGS.QUIZ.length * NGS.POINTS_PER_CORRECT) + " Punkte");
     var arr = visibleArticles();
     if (arr.length === 0) {
       list.innerHTML = '<div class="feed-empty">Keine Artikel zu diesen Themen.<br>Tippe oben auf „Alle“.</div>';
@@ -197,6 +201,95 @@
       return;
     }
     list.innerHTML = arr.map(function (a) { return articleCard(a, false); }).join("");
+  }
+
+  /* ================= DAILY QUIZ ================= */
+  var quiz = { i: -1, score: 0, answered: false };
+
+  function openQuiz() {
+    quiz.i = -1; quiz.score = 0; quiz.answered = false;
+    renderQuiz();
+    go("quiz");
+  }
+
+  function renderQuiz() {
+    var v = $("#quizView");
+    if (!v) return;
+    var Q = NGS.QUIZ, n = Q.length;
+
+    if (quiz.i === -1) {
+      v.innerHTML =
+        '<div class="eyebrow">Daily Quiz</div>' +
+        '<h2 class="h-lg" style="margin-top:6px">Wie gut kennst du Heilbronn?</h2>' +
+        '<p class="lead">' + n + ' kurze Fragen zu den heutigen Stories — bis zu ' + (NGS.POINTS_PER_CORRECT * n) + ' Punkte.</p>' +
+        '<button class="btn" style="margin-top:22px" data-quiznext="1">Quiz starten →</button>' +
+        (state.quizDone ? '<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:14px">Heute schon gespielt — Üben ohne neue Punkte möglich.</p>' : '');
+      return;
+    }
+
+    if (quiz.i >= n) { renderQuizResult(v, n); return; }
+
+    var item = Q[quiz.i];
+    var dots = '';
+    for (var d = 0; d < n; d++) dots += '<i class="' + (d < quiz.i ? 'done' : (d === quiz.i ? 'now' : '')) + '"></i>';
+    var letters = ["A", "B", "C", "D", "E"];
+    var opts = item.options.map(function (o, idx) {
+      return '<button class="quiz-opt" data-quizopt="' + idx + '"><span class="ix">' + letters[idx] + '</span><span>' + esc(o) + '</span></button>';
+    }).join("");
+
+    v.innerHTML =
+      '<div class="quiz-top"><div class="eyebrow">Frage ' + (quiz.i + 1) + ' / ' + n + '</div><div class="progress-dots">' + dots + '</div></div>' +
+      '<div class="quiz-q">' + esc(item.q) + '</div>' +
+      '<div class="quiz-opts" id="quizOpts">' + opts + '</div>' +
+      '<div id="quizAfter"></div>';
+  }
+
+  function answerQuiz(idx) {
+    if (quiz.answered) return;
+    quiz.answered = true;
+    var item = NGS.QUIZ[quiz.i];
+    var correct = item.correct;
+    $all("#quizOpts .quiz-opt").forEach(function (b, i2) {
+      if (i2 === correct) b.classList.add("correct");
+      else if (i2 === idx) b.classList.add("wrong");
+      else b.classList.add("dim");
+      b.setAttribute("disabled", "true");
+    });
+    if (idx === correct) quiz.score++;
+    var last = (quiz.i + 1 >= NGS.QUIZ.length);
+    $("#quizAfter").innerHTML =
+      '<div class="quiz-explain">' + (idx === correct ? '<b>Richtig! </b>' : '<b>Knapp daneben. </b>') + esc(item.explain) + '</div>' +
+      '<button class="btn" style="margin-top:16px" data-quiznext="1">' + (last ? 'Ergebnis ansehen →' : 'Nächste Frage →') + '</button>';
+  }
+
+  function renderQuizResult(v, n) {
+    var sc = quiz.score;
+    var emoji = sc === n ? "🏆" : (sc >= Math.ceil(n / 2) ? "🎉" : "💪");
+    var awarded = 0;
+    if (!state.quizDone) {
+      state.quizDone = true;
+      awarded = sc * NGS.POINTS_PER_CORRECT;
+      if (awarded) setPoints(state.points + awarded);
+    }
+    v.innerHTML =
+      '<div class="quiz-result">' +
+        '<div class="big-emoji">' + emoji + '</div>' +
+        '<div class="quiz-score">' + sc + ' <small>/ ' + n + '</small></div>' +
+        '<p class="sub">' + (sc === n ? 'Perfekt! Du kennst Heilbronn richtig gut.' : 'Stark — und du hast heute schon was über deine Stadt gelernt.') + '</p>' +
+        (awarded ? '<div class="quiz-earn">🎯 +' + awarded + ' Punkte gesammelt</div>'
+                 : '<div class="quiz-earn" style="background:var(--blue-wash);color:var(--blue-deep);border-color:#DCE6FF">Heute bereits gewertet</div>') +
+        '<button class="btn" style="margin-top:20px" data-quizshare="1">Ergebnis teilen</button>' +
+        '<button class="btn ghost" style="margin-top:10px" data-go="feed">Zurück zum Feed</button>' +
+      '</div>';
+  }
+
+  function shareQuiz() {
+    var n = NGS.QUIZ.length;
+    var text = "Ich habe " + quiz.score + "/" + n + " im NeXtGen Stimme Daily Quiz über Heilbronn geschafft. Schaffst du mehr?";
+    var data = { title: "NeXtGen Stimme — Daily Quiz", text: text, url: location.href };
+    if (navigator.share) navigator.share(data).catch(function () {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(text + " " + location.href).then(function () { toast("Ergebnis kopiert 🔗"); });
+    else toast("Teilen hier nicht verfügbar");
   }
 
   /* ================= ARTICLE READER ================= */
@@ -491,6 +584,7 @@
     state.saved = {}; state.savedAwarded = {}; state.selectedTopics = {}; state.lang = "de";
     state.perkUnlocked = false; state.currentArticleId = null; state.settings = { push: true, sound: false };
     state.onboarded = false; state.streak = 1;
+    state.quizDone = false; quiz.i = -1; quiz.score = 0; quiz.answered = false;
     var b = $("#perkCoffee"); b.className = "pk-cta off"; b.textContent = "100 pts"; b.onclick = null;
     deckEl.dataset.built = ""; deckEl.innerHTML = "";
     setPoints(NGS.START_POINTS);
@@ -525,6 +619,10 @@
     if ((el = e.target.closest("[data-toast]"))) { toast(el.dataset.toast); return; }
     if ((el = e.target.closest("[data-speak]"))) { speakArticle(); return; }
     if ((el = e.target.closest("[data-share]"))) { shareArticle(); return; }
+    if ((el = e.target.closest("[data-quizstart]"))) { openQuiz(); return; }
+    if ((el = e.target.closest("[data-quizopt]"))) { answerQuiz(parseInt(el.dataset.quizopt, 10)); return; }
+    if ((el = e.target.closest("[data-quiznext]"))) { quiz.answered = false; quiz.i++; renderQuiz(); return; }
+    if ((el = e.target.closest("[data-quizshare]"))) { shareQuiz(); return; }
     if ((el = e.target.closest("[data-clear]"))) { state.selectedTopics = {}; renderFilterBar(); renderFeed(); var pf = $("#pfInterests"); if (pf) renderProfileInterests(); return; }
     if ((el = e.target.closest("[data-onb]"))) {
       var k = el.dataset.onb;

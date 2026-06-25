@@ -10,6 +10,7 @@ NGS.START_POINTS = 20;     // granted on the landing hook
 NGS.POINTS_PER_VOTE = 20;  // each Pulse vote
 NGS.SCAN_BONUS = 10;       // unlocking a token story
 NGS.POINTS_PER_SAVE = 5;   // saving an article
+NGS.POINTS_PER_CORRECT = 10; // each correct Daily-Quiz answer
 
 /* ---- topics: shared by the feed filter & profile interests ---- */
 NGS.TOPICS = [
@@ -74,5 +75,39 @@ NGS.CARDS = [
       "Kritiker verweisen auf die Finanzierung der laufenden Pflegekosten.",
       "Kombi-Tickets mit ÖPNV gelten als möglicher Mittelweg."
     ]
+  }
+];
+
+/* ---- Daily Quiz: questions tied to the local feed stories ---- */
+NGS.QUIZ = [
+  {
+    q: "Wofür steht der Innovation Park „Ipai\" in Heilbronn?",
+    options: ["Künstliche Intelligenz", "Automobil-Industrie", "Internationale Politik", "Sportförderung"],
+    correct: 0,
+    explain: "Ipai = Innovation Park Artificial Intelligence — einer der größten KI-Standorte Europas."
+  },
+  {
+    q: "Was testet der Bildungscampus laut Feed?",
+    options: ["Gratis-Mensa", "Lernzonen rund um die Uhr", "Kostenlose E-Scooter", "Ein neues Stadion"],
+    correct: 1,
+    explain: "Ein Pilot bringt längere Öffnungszeiten und einen 24/7-Lernbereich per Studi-Ausweis."
+  },
+  {
+    q: "Was wird Heilbronn im Jahr 2027?",
+    options: ["Kulturhauptstadt", "Fahrradstadt des Jahres", "Europäische Grüne Hauptstadt", "Universitätsstadt"],
+    correct: 2,
+    explain: "Heilbronn ist 2027 Europäische Grüne Hauptstadt — deshalb die Debatte um weniger Autoverkehr."
+  },
+  {
+    q: "Wo findet das Heilbronner Volksfest statt?",
+    options: ["Am Marktplatz", "Auf der Theresienwiese", "Im Bildungscampus", "Am Neckarufer"],
+    correct: 1,
+    explain: "Riesenrad, Fahrgeschäfte und Public Viewing gibt es auf der Theresienwiese — bis Mitte Juli."
+  },
+  {
+    q: "Welche Sportart spielen die Heilbronner Falken?",
+    options: ["Fußball", "Basketball", "Handball", "Eishockey"],
+    correct: 3,
+    explain: "Die Falken sind das Eishockey-Team der Stadt — Heimspiele sind bei jungen Fans beliebt."
   }
 ];

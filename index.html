@@ -103,6 +103,11 @@
         <div class="pl-t"><b>Tages-Puls</b><span>Stimme heute über lokale Fragen ab</span></div>
         <div class="pl-go">→</div>
       </div>
+      <div class="quiz-link" data-quizstart="1">
+        <div class="pl-ic">🧠</div>
+        <div class="pl-t"><b>Daily Quiz</b><span id="quizCardSub">5 Fragen · heute</span></div>
+        <div class="pl-go">→</div>
+      </div>
       <div class="filter-bar" id="filterBar"></div>
       <div class="feed-list" id="feedList"></div>
     </section>
@@ -110,6 +115,12 @@
     <!-- ===== ARTICLE READER ===== -->
     <section class="screen" id="screen-article">
       <div id="articleView"></div>
+    </section>
+
+    <!-- ===== DAILY QUIZ ===== -->
+    <section class="screen" id="screen-quiz">
+      <button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Feed</button>
+      <div id="quizView"></div>
     </section>
 
     <!-- ===== PULSE / SWIPE ===== -->
