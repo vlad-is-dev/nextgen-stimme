@@ -263,7 +263,8 @@
     window.speechSynthesis.speak(u);
     toast("Vorlesen gestartet 🔊");
   }
-function shareArticle() {
+
+  function shareArticle() {
     var a = findArticle(state.currentArticleId);
     if (!a) return;
     var data = { title: "NeXtGen Stimme", text: a.title + " — " + a.dek, url: location.href };
@@ -275,6 +276,7 @@ function shareArticle() {
       toast("Teilen hier nicht verfügbar");
     }
   }
+
   /* ================= PROFILE ================= */
   function renderProfileInterests() {
     var box = $("#pfInterests");

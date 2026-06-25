@@ -477,6 +477,7 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 
 /* ---------- saved empty ---------- */
 #screen-saved .feed-empty{margin-top:20px}
+
 /* ============================================================
    FIX: only the active screen receives clicks (stacked layers)
    + live Pulse result styles (feature pass 3)
@@ -488,6 +489,7 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .vote-count .live{color:var(--coral)}
 .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--coral);margin-right:5px;vertical-align:middle;animation:livepulse 1.4s infinite}
 @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.3}}
+
 /* ============================================================
    MOBILE: on real phones drop the device mockup and go fullscreen
    (the framed "phone on a desk" look is only for desktop/portfolio)
