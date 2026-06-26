@@ -551,3 +551,18 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .quiz-score small{font-size:18px;color:var(--muted);font-weight:700}
 .quiz-result .sub{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5}
 .quiz-earn{margin:20px auto 0;max-width:240px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--mint);border:1px solid #CFEEDD;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;color:#0A6B3B}
+
+/* ============================================================
+   FIX: Pulse result layout (no clipped button) + feed search
+   ============================================================ */
+#screen-pulse{display:flex;flex-direction:column}
+#screen-pulse .deck{flex:1 1 auto;height:auto;min-height:360px}
+.result{padding:14px 16px 18px;overflow-y:auto}
+
+.feed-search{
+  display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--hair);
+  border-radius:14px;padding:11px 14px;margin-bottom:12px;box-shadow:var(--shadow-soft);
+}
+.feed-search svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex:0 0 auto}
+.feed-search input{border:0;outline:0;background:none;font-family:var(--body);font-size:14px;color:var(--ink);width:100%}
+.feed-search input::placeholder{color:var(--muted)}

@@ -21,6 +21,7 @@
     onboarded: false,
     streak: 1,
     quizDone: false,
+    search: "",
     settings: { push: true, sound: false }
   };
 
@@ -40,7 +41,6 @@
 
   function go(name) {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-    if (name === "feed" && !state.onboarded) name = "onboarding";
     $all(".screen").forEach(function (s) { s.classList.toggle("active", s.id === "screen-" + name); });
     showShell(name !== "landing" && name !== "onboarding");
     var tabName = (name === "onboarding" || name === "saved" || name === "article" || name === "quiz") ? "feed" : name;
@@ -100,8 +100,13 @@
   /* ================= FEED ================= */
   function visibleArticles() {
     var keys = Object.keys(state.selectedTopics);
-    if (keys.length === 0) return NGS.ARTICLES.slice();
-    return NGS.ARTICLES.filter(function (a) { return state.selectedTopics[a.topic]; });
+    var arr = NGS.ARTICLES.slice();
+    if (keys.length) arr = arr.filter(function (a) { return state.selectedTopics[a.topic]; });
+    var q = (state.search || "").trim().toLowerCase();
+    if (q) arr = arr.filter(function (a) {
+      return (a.title + " " + a.dek + " " + a.cat).toLowerCase().indexOf(q) !== -1;
+    });
+    return arr;
   }
 
   function renderFilterBar() {
@@ -585,6 +590,7 @@
     state.perkUnlocked = false; state.currentArticleId = null; state.settings = { push: true, sound: false };
     state.onboarded = false; state.streak = 1;
     state.quizDone = false; quiz.i = -1; quiz.score = 0; quiz.answered = false;
+    state.search = ""; var fse = $("#feedSearch"); if (fse) fse.value = "";
     var b = $("#perkCoffee"); b.className = "pk-cta off"; b.textContent = "100 pts"; b.onclick = null;
     deckEl.dataset.built = ""; deckEl.innerHTML = "";
     setPoints(NGS.START_POINTS);
@@ -656,6 +662,8 @@
   });
 
   $("#startCamBtn").addEventListener("click", startCamera);
+  var feedSearchEl = $("#feedSearch");
+  if (feedSearchEl) feedSearchEl.addEventListener("input", function (e) { state.search = e.target.value; renderFeed(); });
   $("#onbContinue").addEventListener("click", function () {
     if (Object.keys(state.selectedTopics).length) finishOnboarding(false);
   });
