@@ -20,7 +20,8 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
   .qr{background:#fff;border:1px solid var(--hair);border-radius:18px;padding:18px;text-align:center;box-shadow:var(--shadow-soft);break-inside:avoid}
   .qr.app{background:radial-gradient(120% 120% at 90% 0%, #2456FF, #0B1A40);border:0;color:#fff}
-  .qr canvas{width:170px;height:170px;background:#fff;border-radius:12px;padding:8px}
+  .qr img{width:170px;height:170px;background:#fff;border-radius:12px;padding:8px;image-rendering:pixelated}
+  .qr .noqr{width:170px;height:170px;display:grid;place-items:center;color:var(--muted);font-size:12px;background:#fff;border-radius:12px}
   .qr .cat{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--blue);margin-top:12px}
   .qr.app .cat{color:var(--lime)}
   .qr .t{font-family:var(--display);font-weight:700;font-size:14px;color:var(--navy);margin-top:6px;line-height:1.25}
@@ -42,7 +43,7 @@
     <div class="grid" id="grid"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
   <script src="js/data.js"></script>
   <script src="js/articles.js"></script>
   <script>
@@ -52,17 +53,24 @@
     var base = location.href.split("#")[0].split("?")[0].replace(/present(\.html)?$/, "");
     var grid = document.getElementById("grid");
 
+    function qrDataURL(text) {
+      if (typeof qrcode === "undefined") return null;
+      var qr = qrcode(0, "M");      // typeNumber 0 = auto-fit, ECC level M
+      qr.addData(text);
+      qr.make();
+      return qr.createDataURL(6, 8); // (cellSize, margin) -> GIF data URL, no canvas
+    }
+
     function card(opts) {
       var el = document.createElement("div");
       el.className = "qr" + (opts.app ? " app" : "");
-      el.innerHTML = '<canvas></canvas>' +
+      var src = qrDataURL(opts.url);
+      el.innerHTML =
+        (src ? '<img src="' + src + '" alt="QR" />' : '<div class="noqr">QR-Lib nicht geladen</div>') +
         '<div class="cat">' + opts.cat + '</div>' +
         '<div class="t">' + opts.title + '</div>' +
         '<div class="u">' + opts.url.replace(/^https?:\/\//, "") + '</div>';
       grid.appendChild(el);
-      if (window.QRCode) {
-        QRCode.toCanvas(el.querySelector("canvas"), opts.url, { width: 320, margin: 1, color: { dark: "#0B1A40", light: "#ffffff" } }, function (err) { if (err) console.error(err); });
-      }
     }
 
     // 1) full app
