@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0B1A40" />
+<title>NeXtGen Stimme — Story</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+  /* standalone article-landing page (reached by scanning a QR) */
+  body{display:block;place-items:initial;padding:0;background:
+    radial-gradient(900px 460px at 12% -10%, #E9F0FF 0%, transparent 55%),
+    radial-gradient(800px 520px at 112% 8%, #F0EBFF 0%, transparent 50%),
+    var(--paper);}
+  .page{max-width:480px;margin:0 auto;padding:18px 18px 64px;min-height:100dvh}
+  .pagebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-top:env(safe-area-inset-top)}
+  .pagebar .brand{display:flex;flex-direction:column;line-height:1}
+  .pagebar .wordmark{font-family:var(--display);font-weight:800;font-size:18px;color:var(--navy)}
+  .pagebar .wordmark .x{color:var(--blue)}
+  .pagebar .tagline{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-top:3px}
+  .applink{font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;background:var(--blue-wash);padding:9px 13px;border-radius:11px}
+
+  .vote-card{margin-top:18px;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+  .vote-card .eyebrow{color:var(--blue)}
+  .vote-card h3{font-family:var(--display);font-weight:700;font-size:19px;color:var(--navy);margin:6px 0 0;line-height:1.25}
+  .vote-card .vsub{color:var(--muted);font-size:13px;margin-top:6px}
+  .vote-actions{display:flex;gap:12px;margin-top:16px}
+  .vote-actions button{flex:1;border:0;border-radius:14px;padding:16px;font-family:var(--body);font-weight:800;font-size:16px;cursor:pointer;color:#fff;transition:transform .12s}
+  .vote-actions button:active{transform:scale(.97)}
+  .vote-actions .no{background:var(--coral)}
+  .vote-actions .yes{background:var(--green)}
+  .vote-result{margin-top:6px}
+  .vote-thanks{margin-top:14px;text-align:center;font-size:13px;font-weight:700;color:#0A6B3B;background:var(--mint);border:1px solid #CFEEDD;border-radius:12px;padding:11px}
+  .applink-big{display:block;text-align:center;text-decoration:none;margin-top:18px}
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="pagebar">
+      <div class="brand">
+        <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
+        <div class="tagline">Your city. Your voice.</div>
+      </div>
+      <a class="applink" href="./">Ganze App →</a>
+    </div>
+    <div id="art"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/articles.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/live.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    function $(s, el) { return (el || document).querySelector(s); }
+    function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+    var params = new URLSearchParams(location.search);
+    var id = params.get("id") || NGS.FEATURED_ID || NGS.ARTICLES[0].id;
+    var a = null;
+    for (var i = 0; i < NGS.ARTICLES.length; i++) if (NGS.ARTICLES[i].id === id) { a = NGS.ARTICLES[i]; break; }
+    if (!a) a = NGS.ARTICLES[0];
+
+    var lang = "de";
+    var cardId = "art_" + a.id;
+    var voted = false, sub = null;
+
+    NGS.Live.init();
+    render();
+
+    function digestHtml() {
+      var list = lang === "en" ? a.aiEn : a.ai;
+      var bullets = list.map(function (t, i) { return '<li class="in"><b>' + (i + 1) + '</b><span>' + esc(t) + '</span></li>'; }).join("");
+      return '<div class="digest">' +
+        '<div class="digest-head">' +
+          '<span class="ai-tag"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>KI-Zusammenfassung</span>' +
+          '<div class="seg"><button data-lang="de" class="' + (lang === "de" ? "on" : "") + '">DE</button>' +
+          '<button data-lang="en" class="' + (lang === "en" ? "on" : "") + '">EN</button></div>' +
+        '</div><div class="ai-box"><ul>' + bullets + '</ul></div></div>';
+    }
+
+    function render() {
+      var grad = NGS.topic(a.topic).grad;
+      $("#art").innerHTML =
+        '<div class="reader-hero" style="background:' + grad + '"><div class="rh-top"><span class="ac-cat">' + esc(a.cat) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div></div>' +
+        '<h1 class="reader-title">' + esc(a.title) + '</h1>' +
+        '<div class="reader-meta"><span>' + esc(a.date) + '</span><span>·</span><span>' + a.read + ' Min Lesezeit</span></div>' +
+        '<p class="reader-dek">' + esc(a.dek) + '</p>' +
+        '<div id="digestWrap">' + digestHtml() + '</div>' +
+        '<div class="reader-body">' + a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join("") + '</div>' +
+        '<a class="source-link" href="https://www.stimme.de" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg>Originalquelle auf stimme.de</a>' +
+
+        '<div class="vote-card">' +
+          '<div class="eyebrow">Stimme Pulse</div>' +
+          '<h3>Gut für Heilbronn?</h3>' +
+          '<div class="vsub">Stimme ab und sieh das Live-Ergebnis aus der Stadt.</div>' +
+          '<div class="vote-actions" id="voteActions">' +
+            '<button class="no" data-vote="no">NEIN</button>' +
+            '<button class="yes" data-vote="yes">JA</button>' +
+          '</div>' +
+          '<div class="vote-result" id="voteResult" hidden>' +
+            '<div class="stat yes"><div class="row"><span class="lab">JA</span><span data-pct="yes">–</span></div><div class="bar"><i class="fill" data-fill="yes"></i></div></div>' +
+            '<div class="stat no"><div class="row"><span class="lab">NEIN</span><span data-pct="no">–</span></div><div class="bar"><i class="fill" data-fill="no"></i></div></div>' +
+            '<div class="vote-count" data-votecount></div>' +
+            '<div class="vote-thanks">Danke! Deine Stimme zählt für Heilbronn.</div>' +
+          '</div>' +
+        '</div>' +
+
+        '<a class="btn applink-big" href="./">Mehr aus Heilbronn in der App →</a>' +
+        '<div class="reader-disclaimer">Demo-Inhalt im Stil der Heilbronner Stimme · KI-Zusammenfassung automatisch erzeugt</div>';
+    }
+
+    function setLoading() {
+      var r = $("#voteResult");
+      r.querySelector('[data-pct="yes"]').textContent = "…";
+      r.querySelector('[data-pct="no"]').textContent = "…";
+      r.querySelector("[data-votecount]").innerHTML = '<span class="live-dot"></span>Live-Ergebnisse werden geladen…';
+    }
+
+    function applyResult(res, mode) {
+      var r = $("#voteResult");
+      var yes = res.yes || 0, no = res.no || 0, total = yes + no;
+      var yp = total ? Math.round(yes / total * 100) : 0, np = total ? 100 - yp : 0;
+      r.querySelector('[data-pct="yes"]').textContent = yp + "%";
+      r.querySelector('[data-pct="no"]').textContent = np + "%";
+      r.querySelector('[data-fill="yes"]').style.width = yp + "%";
+      r.querySelector('[data-fill="no"]').style.width = np + "%";
+      var vc = r.querySelector("[data-votecount]");
+      if (mode === "live") vc.innerHTML = '<span class="live-dot"></span><span class="live">live aus Heilbronn</span> · ' + total + (total === 1 ? " Stimme" : " Stimmen");
+      else if (mode === "error") vc.innerHTML = '<span style="color:var(--muted)">Live momentan nicht erreichbar</span> · Beispielwerte';
+      else vc.textContent = "Beispielverteilung · richte Supabase ein für echte Live-Stimmen";
+    }
+
+    function vote(choice) {
+      if (voted) return;
+      voted = true;
+      $("#voteActions").style.display = "none";
+      $("#voteResult").hidden = false;
+      if (NGS.Live.isConfigured()) {
+        setLoading();
+        NGS.Live.castVote(cardId, choice).then(function (row) {
+          if (row) applyResult({ yes: row.yes, no: row.no }, "live");
+          else applyResult({ yes: 1, no: 0 }, "example");
+        }).catch(function (err) {
+          console.error("[Story] Live-Vote fehlgeschlagen:", (err && err.message) ? err.message : err);
+          applyResult({ yes: 50, no: 50 }, "error");
+        });
+        sub = NGS.Live.subscribe(cardId, function (c) { applyResult(c, "live"); });
+      } else {
+        applyResult({ yes: 50, no: 50 }, "example");
+      }
+    }
+
+    document.addEventListener("click", function (e) {
+      var el;
+      if ((el = e.target.closest("[data-vote]"))) { vote(el.dataset.vote); return; }
+      if ((el = e.target.closest("[data-lang]"))) { lang = el.dataset.lang; $("#digestWrap").innerHTML = digestHtml(); return; }
+    });
+  })();
+  </script>
+</body>
+</html>

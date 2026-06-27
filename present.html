@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NeXtGen Stimme — QR-Codes für die Präsentation</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+<style>
+  body{display:block;place-items:initial;padding:32px 20px 60px;background:var(--paper)}
+  .wrap{max-width:1000px;margin:0 auto}
+  .head{text-align:center;margin-bottom:8px}
+  .head .wordmark{font-family:var(--display);font-weight:800;font-size:26px;color:var(--navy)}
+  .head .wordmark .x{color:var(--blue)}
+  .head p{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5}
+  .hint{max-width:620px;margin:14px auto 26px;background:var(--blue-wash);border:1px solid #DCE6FF;border-radius:14px;padding:14px 16px;color:var(--blue-deep);font-size:13px;line-height:1.55;text-align:center}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .qr{background:#fff;border:1px solid var(--hair);border-radius:18px;padding:18px;text-align:center;box-shadow:var(--shadow-soft);break-inside:avoid}
+  .qr.app{background:radial-gradient(120% 120% at 90% 0%, #2456FF, #0B1A40);border:0;color:#fff}
+  .qr canvas{width:170px;height:170px;background:#fff;border-radius:12px;padding:8px}
+  .qr .cat{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--blue);margin-top:12px}
+  .qr.app .cat{color:var(--lime)}
+  .qr .t{font-family:var(--display);font-weight:700;font-size:14px;color:var(--navy);margin-top:6px;line-height:1.25}
+  .qr.app .t{color:#fff}
+  .qr .u{font-size:10px;color:var(--muted);margin-top:8px;word-break:break-all}
+  .qr.app .u{color:rgba(255,255,255,.65)}
+  @media print{ body{padding:0} .hint{display:none} .qr{box-shadow:none} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
+      <p>QR-Codes für die Präsentation — auf den Beamer werfen oder ausdrucken.</p>
+    </div>
+    <div class="hint">
+      Das Publikum scannt einen QR mit der normalen Handy-Kamera und landet direkt auf der Story mit KI-Zusammenfassung und Live-Abstimmung. Kein Download, kein In-App-Scan nötig.
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/articles.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    // base URL of the deployment (works locally and on Vercel)
+    var base = location.href.split("#")[0].split("?")[0].replace(/present(\.html)?$/, "");
+    var grid = document.getElementById("grid");
+
+    function card(opts) {
+      var el = document.createElement("div");
+      el.className = "qr" + (opts.app ? " app" : "");
+      el.innerHTML = '<canvas></canvas>' +
+        '<div class="cat">' + opts.cat + '</div>' +
+        '<div class="t">' + opts.title + '</div>' +
+        '<div class="u">' + opts.url.replace(/^https?:\/\//, "") + '</div>';
+      grid.appendChild(el);
+      if (window.QRCode) {
+        QRCode.toCanvas(el.querySelector("canvas"), opts.url, { width: 320, margin: 1, color: { dark: "#0B1A40", light: "#ffffff" } }, function (err) { if (err) console.error(err); });
+      }
+    }
+
+    // 1) full app
+    card({ app: true, cat: "VOLLE APP", title: "NeXtGen Stimme öffnen", url: base });
+
+    // 2) one QR per article → article.html?id=...
+    NGS.ARTICLES.forEach(function (a) {
+      card({ cat: a.cat, title: a.title, url: base + "article.html?id=" + a.id });
+    });
+  })();
+  </script>
+</body>
+</html>
