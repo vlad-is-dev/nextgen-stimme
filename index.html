@@ -12,6 +12,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/styles.css" />
+<style>
+  /* top-bar DE/EN language toggle (reuses .seg, tuned for the dark bar) */
+  .topbar .seg{background:rgba(255,255,255,.14);border:0}
+  .topbar .seg button{color:#fff;opacity:.6;font-weight:700}
+  .topbar .seg button.on{background:#fff;color:#0B1A40;opacity:1}
+  .topbar-right{display:flex;align-items:center;gap:8px}
+</style>
 </head>
 <body>
 <div class="device" id="device">
@@ -23,7 +30,13 @@
       <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
       <div class="tagline">Your city. Your voice.</div>
     </div>
-    <div class="points" id="pointsPill"><span class="dot"></span><span id="pointsVal">20</span> pts</div>
+    <div class="topbar-right">
+      <div class="seg" role="group" aria-label="Language">
+        <button data-setlang="de" class="on">DE</button>
+        <button data-setlang="en">EN</button>
+      </div>
+      <div class="points" id="pointsPill"><span class="dot"></span><span id="pointsVal">20</span> pts</div>
+    </div>
   </header>
 
   <div class="screens" id="screens">
@@ -35,38 +48,38 @@
           <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
           <div class="tagline">Your city. Your voice.</div>
         </div>
-        <div class="pin-badge"><span class="ping"></span> Bildungscampus · NeXtGen-Spot</div>
+        <div class="pin-badge"><span class="ping"></span> <span data-i18n="land_badge">Bildungscampus · NeXtGen-Spot</span></div>
         <div class="landing-hero">
-          <h1>Du hast einen <em>geheimen Spot</em> am Campus gefunden.</h1>
-          <p>Kein Download. Tippe rein, scanne den NeXtGen-Token daneben und schalte eine lokale Story frei — plus deinen ersten Bonus.</p>
+          <h1 data-i18n-html="land_h1">Du hast einen <em>geheimen Spot</em> am Campus gefunden.</h1>
+          <p data-i18n="land_p">Kein Download. Tippe rein, scanne den NeXtGen-Token daneben und schalte eine lokale Story frei — plus deinen ersten Bonus.</p>
         </div>
         <div class="landing-meta">
-          <div class="chip"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> 60-Sek-Story</div>
-          <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg> Swipe statt scrollen</div>
-          <div class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> +20 Punkte sofort</div>
+          <div class="chip"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <span data-i18n="land_chip1">60-Sek-Story</span></div>
+          <div class="chip"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></svg> <span data-i18n="land_chip2">Swipe statt scrollen</span></div>
+          <div class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span data-i18n="land_chip3">+20 Punkte sofort</span></div>
         </div>
-        <button class="btn" data-go="scan">Story freischalten →</button>
-        <div class="landing-foot">Heilbronner Stimme · für Heilbronn 20–35</div>
+        <button class="btn" data-go="scan" data-i18n="land_cta">Story freischalten →</button>
+        <div class="landing-foot" data-i18n="land_foot">Heilbronner Stimme · für Heilbronn 20–35</div>
       </div>
     </section>
 
     <!-- ===== TOKEN SCAN ===== -->
     <section class="screen" id="screen-scan">
       <div class="scan-hero">
-        <div class="eyebrow">3D-Token</div>
-        <h2 class="h-lg" style="margin-top:6px">Scanne den NeXtGen-Token</h2>
-        <p class="lead">Physische Tokens in der Stadt öffnen digitale Geschichten. Richte die Kamera auf den Token neben dir.</p>
+        <div class="eyebrow" data-i18n="scan_eyebrow">3D-Token</div>
+        <h2 class="h-lg" style="margin-top:6px" data-i18n="scan_title">Scanne den NeXtGen-Token</h2>
+        <p class="lead" data-i18n="scan_lead">Physische Tokens in der Stadt öffnen digitale Geschichten. Richte die Kamera auf den Token neben dir.</p>
       </div>
       <div class="scan-stage" id="scanStage">
         <video id="scanVideo" playsinline muted></video>
         <div class="scan-frame"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
         <div class="scan-laser"></div>
-        <div class="scan-hint" id="scanHint">Token im Rahmen ausrichten…</div>
+        <div class="scan-hint" id="scanHint" data-i18n="scan_hint">Token im Rahmen ausrichten…</div>
       </div>
       <div class="scan-actions">
-        <button class="btn" id="startCamBtn">Kamera starten</button>
-        <button class="btn ghost" id="demoBtn">Keinen Token? Demo-Story öffnen</button>
-        <p class="scan-note" id="scanNote">Die Kamera funktioniert auf der veröffentlichten HTTPS-Seite oder über localhost. In der Vorschau nutze „Demo-Story“.</p>
+        <button class="btn" id="startCamBtn" data-i18n="scan_start">Kamera starten</button>
+        <button class="btn ghost" id="demoBtn" data-i18n="scan_demo">Keinen Token? Demo-Story öffnen</button>
+        <p class="scan-note" id="scanNote" data-i18n="scan_note">Die Kamera funktioniert auf der veröffentlichten HTTPS-Seite oder über localhost. In der Vorschau nutze „Demo-Story“.</p>
       </div>
     </section>
 
@@ -86,8 +99,8 @@
 
     <!-- ===== SAVED / MERKLISTE ===== -->
     <section class="screen" id="screen-saved">
-      <button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Feed</button>
-      <h1 class="h-lg" style="margin:2px 2px 14px">Merkliste</h1>
+      <button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span data-i18n="back_feed">Feed</span></button>
+      <h1 class="h-lg" style="margin:2px 2px 14px" data-i18n="saved_title">Merkliste</h1>
       <div class="feed-list" id="savedList"></div>
     </section>
 
@@ -95,22 +108,22 @@
     <section class="screen" id="screen-feed">
       <div class="feed-greet">
         <h1 id="greetTitle">Guten Abend 👋</h1>
-        <p>Dein Feed, Pulse und City-Perks für Heilbronn.</p>
+        <p data-i18n="feed_sub">Dein Feed, Pulse und City-Perks für Heilbronn.</p>
         <div class="streak-chip" id="streakChip"></div>
       </div>
       <div class="pulse-link" data-go="pulse">
         <div class="pl-ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg></div>
-        <div class="pl-t"><b>Tages-Puls</b><span>Stimme heute über lokale Fragen ab</span></div>
+        <div class="pl-t"><b data-i18n="pulse_card_t">Tages-Puls</b><span data-i18n="pulse_card_s">Stimme heute über lokale Fragen ab</span></div>
         <div class="pl-go">→</div>
       </div>
       <div class="quiz-link" data-quizstart="1">
         <div class="pl-ic">🧠</div>
-        <div class="pl-t"><b>Daily Quiz</b><span id="quizCardSub">5 Fragen · heute</span></div>
+        <div class="pl-t"><b data-i18n="quiz_card_t">Daily Quiz</b><span id="quizCardSub">5 Fragen · heute</span></div>
         <div class="pl-go">→</div>
       </div>
       <div class="feed-search">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="feedSearch" type="text" inputmode="search" placeholder="Suche in Heilbronn…" autocomplete="off" />
+        <input id="feedSearch" type="text" inputmode="search" data-i18n-ph="search_ph" placeholder="Suche in Heilbronn…" autocomplete="off" />
       </div>
       <div class="filter-bar" id="filterBar"></div>
       <div class="feed-list" id="feedList"></div>
@@ -123,7 +136,7 @@
 
     <!-- ===== DAILY QUIZ ===== -->
     <section class="screen" id="screen-quiz">
-      <button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Feed</button>
+      <button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span data-i18n="back_feed">Feed</span></button>
       <div id="quizView"></div>
     </section>
 
@@ -131,8 +144,8 @@
     <section class="screen" id="screen-pulse">
       <div class="pulse-head">
         <div>
-          <div class="eyebrow">Stimme Pulse</div>
-          <h2 class="h-lg" style="margin-top:4px">Wie tickt Heilbronn?</h2>
+          <div class="eyebrow" data-i18n="pulse_eyebrow">Stimme Pulse</div>
+          <h2 class="h-lg" style="margin-top:4px" data-i18n="pulse_title">Wie tickt Heilbronn?</h2>
         </div>
         <div class="progress-dots" id="dots"></div>
       </div>
@@ -147,31 +160,31 @@
     <!-- ===== WALLET ===== -->
     <section class="screen" id="screen-wallet">
       <div class="balance">
-        <div class="lab">Dein Guthaben</div>
+        <div class="lab" data-i18n="wallet_balance">Dein Guthaben</div>
         <div class="big"><span id="walletBig">20</span> <small>pts</small></div>
         <div class="meter"><i id="walletMeter" style="width:20%"></i></div>
-        <div class="next"><span id="walletNext">80 Punkte bis zum nächsten Reward</span><span>Ziel: 100</span></div>
+        <div class="next"><span id="walletNext">80 Punkte bis zum nächsten Reward</span><span data-i18n="wallet_goal">Ziel: 100</span></div>
       </div>
-      <div class="section-title">Deine Perks in Heilbronn</div>
+      <div class="section-title" data-i18n="wallet_perks">Deine Perks in Heilbronn</div>
       <div class="perk">
         <div class="ic a">☕</div>
-        <div class="pk-body"><div class="pk-title">Gratis Kaffee</div><div class="pk-sub">Café am Kiliansplatz · einlösbar mit 100 pts</div></div>
+        <div class="pk-body"><div class="pk-title" data-i18n="perk1_t">Gratis Kaffee</div><div class="pk-sub" data-i18n="perk1_s">Café am Kiliansplatz · einlösbar mit 100 pts</div></div>
         <button class="pk-cta off" id="perkCoffee">100 pts</button>
       </div>
       <div class="perk">
         <div class="ic b">🎟️</div>
-        <div class="pk-body"><div class="pk-title">−20% BUGA-Tagesticket</div><div class="pk-sub">Für Studierende · Partner-Angebot</div></div>
+        <div class="pk-body"><div class="pk-title" data-i18n="perk2_t">−20% BUGA-Tagesticket</div><div class="pk-sub" data-i18n="perk2_s">Für Studierende · Partner-Angebot</div></div>
         <button class="pk-cta off">200 pts</button>
       </div>
       <div class="perk">
         <div class="ic c">📰</div>
-        <div class="pk-body"><div class="pk-title">1 Monat Stimme+ gratis</div><div class="pk-sub">Voller Zugriff auf stimme.de</div></div>
+        <div class="pk-body"><div class="pk-title" data-i18n="perk3_t">1 Monat Stimme+ gratis</div><div class="pk-sub" data-i18n="perk3_s">Voller Zugriff auf stimme.de</div></div>
         <button class="pk-cta off">300 pts</button>
       </div>
       <div class="upsell">
-        <h2 class="h-lg">Sichere deine Punkte</h2>
-        <p>Erstelle in 5 Sekunden ein Profil — deine Perks bleiben, kein Spam, keine Pflicht.</p>
-        <button class="btn" data-go="profile">Profil ansehen</button>
+        <h2 class="h-lg" data-i18n="upsell_t">Sichere deine Punkte</h2>
+        <p data-i18n="upsell_s">Erstelle in 5 Sekunden ein Profil — deine Perks bleiben, kein Spam, keine Pflicht.</p>
+        <button class="btn" data-go="profile" data-i18n="upsell_cta">Profil ansehen</button>
       </div>
     </section>
 
@@ -184,11 +197,11 @@
 
   <!-- TAB BAR -->
   <nav class="tabbar hidden" id="tabbar">
-    <button class="tab" data-tab="feed"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>Home</button>
-    <button class="tab" data-tab="pulse"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>Pulse</button>
-    <button class="tab" data-tab="wallet"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M16 12h2"/></svg>Wallet</button>
-    <button class="tab" data-tab="scan"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/></svg>Token</button>
-    <button class="tab" data-tab="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg>Profil</button>
+    <button class="tab" data-tab="feed"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg><span data-i18n="tab_home">Home</span></button>
+    <button class="tab" data-tab="pulse"><svg viewBox="0 0 24 24"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg><span data-i18n="tab_pulse">Pulse</span></button>
+    <button class="tab" data-tab="wallet"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M16 12h2"/></svg><span data-i18n="tab_wallet">Wallet</span></button>
+    <button class="tab" data-tab="scan"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3"/></svg><span data-i18n="tab_token">Token</span></button>
+    <button class="tab" data-tab="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg><span data-i18n="tab_profile">Profil</span></button>
   </nav>
 
   <div class="toast" id="toast"></div>
@@ -200,6 +213,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/data.js"></script>
 <script src="js/articles.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/config.js"></script>
 <script src="js/live.js"></script>
 <script src="js/swipe.js"></script>

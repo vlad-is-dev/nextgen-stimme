@@ -45,7 +45,10 @@
         <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
         <div class="tagline">Your city. Your voice.</div>
       </div>
-      <a class="applink" href="./">Ganze App →</a>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="seg" id="langSeg"><button data-lang="de" class="on">DE</button><button data-lang="en">EN</button></div>
+        <a class="applink" id="appLink" href="./">Ganze App →</a>
+      </div>
     </div>
     <div id="art"></div>
   </div>
@@ -69,61 +72,104 @@
 
     var lang = "de";
     var cardId = "art_" + a.id;
-    var voted = false, sub = null;
+    var voted = false, sub = null, lastRes = null, lastMode = null;
+
+    /* page-specific UI strings */
+    var UI = {
+      de: {
+        applink: "Ganze App →", read_min: "Min Lesezeit", ai_summary: "KI-Zusammenfassung",
+        source: "Originalquelle auf stimme.de", pulse_eyebrow: "Stimme Pulse",
+        vote_q: "Gut für Heilbronn?", vote_sub: "Stimme ab und sieh das Live-Ergebnis aus der Stadt.",
+        yes_caps: "JA", no_caps: "NEIN", thanks: "Danke! Deine Stimme zählt für Heilbronn.",
+        live_loading: "Live-Ergebnisse werden geladen…", live_label: "live aus Heilbronn",
+        stimme: "Stimme", stimmen: "Stimmen", live_off: "Live momentan nicht erreichbar",
+        example: "Beispielwerte", example_dist: "Beispielverteilung · richte Supabase ein für echte Live-Stimmen",
+        app_big: "Mehr aus Heilbronn in der App →",
+        disclaimer: "Demo-Inhalt im Stil der Heilbronner Stimme · KI-Zusammenfassung automatisch erzeugt"
+      },
+      en: {
+        applink: "Full app →", read_min: "min read", ai_summary: "AI summary",
+        source: "Original source on stimme.de", pulse_eyebrow: "Stimme Pulse",
+        vote_q: "Good for Heilbronn?", vote_sub: "Vote and see the live result from the city.",
+        yes_caps: "YES", no_caps: "NO", thanks: "Thanks! Your vote counts for Heilbronn.",
+        live_loading: "Loading live results…", live_label: "live from Heilbronn",
+        stimme: "vote", stimmen: "votes", live_off: "Live currently unavailable",
+        example: "example values", example_dist: "Example distribution · set up Supabase for real live votes",
+        app_big: "More from Heilbronn in the app →",
+        disclaimer: "Demo content in the style of Heilbronner Stimme · AI summary generated automatically"
+      }
+    };
+    function U(k) { return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : (UI.de[k] != null ? UI.de[k] : k); }
+    var EN = function () { return lang === "en"; };
+    function T()   { return EN() && a.titleEn ? a.titleEn : a.title; }
+    function D()   { return EN() && a.dekEn   ? a.dekEn   : a.dek; }
+    function BODY(){ return EN() && a.bodyEn  ? a.bodyEn  : a.body; }
+    function AI()  { return EN() && a.aiEn    ? a.aiEn    : a.ai; }
+    function CAT() { return EN() ? (NGS.topic(a.topic).labelEn || a.cat).toUpperCase() : a.cat; }
 
     NGS.Live.init();
     render();
 
     function digestHtml() {
-      var list = lang === "en" ? a.aiEn : a.ai;
-      var bullets = list.map(function (t, i) { return '<li class="in"><b>' + (i + 1) + '</b><span>' + esc(t) + '</span></li>'; }).join("");
+      var bullets = AI().map(function (t, i) { return '<li class="in"><b>' + (i + 1) + '</b><span>' + esc(t) + '</span></li>'; }).join("");
       return '<div class="digest">' +
         '<div class="digest-head">' +
-          '<span class="ai-tag"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>KI-Zusammenfassung</span>' +
+          '<span class="ai-tag"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>' + U("ai_summary") + '</span>' +
           '<div class="seg"><button data-lang="de" class="' + (lang === "de" ? "on" : "") + '">DE</button>' +
           '<button data-lang="en" class="' + (lang === "en" ? "on" : "") + '">EN</button></div>' +
         '</div><div class="ai-box"><ul>' + bullets + '</ul></div></div>';
     }
 
     function render() {
+      document.documentElement.lang = lang;
+      $("#langSeg").querySelectorAll("button").forEach(function (b) { b.classList.toggle("on", b.dataset.lang === lang); });
+      $("#appLink").textContent = U("applink");
       var grad = NGS.topic(a.topic).grad;
       $("#art").innerHTML =
-        '<div class="reader-hero" style="background:' + grad + '"><div class="rh-top"><span class="ac-cat">' + esc(a.cat) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div></div>' +
-        '<h1 class="reader-title">' + esc(a.title) + '</h1>' +
-        '<div class="reader-meta"><span>' + esc(a.date) + '</span><span>·</span><span>' + a.read + ' Min Lesezeit</span></div>' +
-        '<p class="reader-dek">' + esc(a.dek) + '</p>' +
+        '<div class="reader-hero" style="background:' + grad + '"><div class="rh-top"><span class="ac-cat">' + esc(CAT()) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div></div>' +
+        '<h1 class="reader-title">' + esc(T()) + '</h1>' +
+        '<div class="reader-meta"><span>' + esc(a.date) + '</span><span>·</span><span>' + a.read + ' ' + U("read_min") + '</span></div>' +
+        '<p class="reader-dek">' + esc(D()) + '</p>' +
         '<div id="digestWrap">' + digestHtml() + '</div>' +
-        '<div class="reader-body">' + a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join("") + '</div>' +
-        '<a class="source-link" href="https://www.stimme.de" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg>Originalquelle auf stimme.de</a>' +
+        '<div class="reader-body">' + BODY().map(function (p) { return '<p>' + esc(p) + '</p>'; }).join("") + '</div>' +
+        '<a class="source-link" href="https://www.stimme.de" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg>' + U("source") + '</a>' +
 
         '<div class="vote-card">' +
-          '<div class="eyebrow">Stimme Pulse</div>' +
-          '<h3>Gut für Heilbronn?</h3>' +
-          '<div class="vsub">Stimme ab und sieh das Live-Ergebnis aus der Stadt.</div>' +
+          '<div class="eyebrow">' + U("pulse_eyebrow") + '</div>' +
+          '<h3>' + U("vote_q") + '</h3>' +
+          '<div class="vsub">' + U("vote_sub") + '</div>' +
           '<div class="vote-actions" id="voteActions">' +
-            '<button class="no" data-vote="no">NEIN</button>' +
-            '<button class="yes" data-vote="yes">JA</button>' +
+            '<button class="no" data-vote="no">' + U("no_caps") + '</button>' +
+            '<button class="yes" data-vote="yes">' + U("yes_caps") + '</button>' +
           '</div>' +
           '<div class="vote-result" id="voteResult" hidden>' +
-            '<div class="stat yes"><div class="row"><span class="lab">JA</span><span data-pct="yes">–</span></div><div class="bar"><i class="fill" data-fill="yes"></i></div></div>' +
-            '<div class="stat no"><div class="row"><span class="lab">NEIN</span><span data-pct="no">–</span></div><div class="bar"><i class="fill" data-fill="no"></i></div></div>' +
+            '<div class="stat yes"><div class="row"><span class="lab">' + U("yes_caps") + '</span><span data-pct="yes">–</span></div><div class="bar"><i class="fill" data-fill="yes"></i></div></div>' +
+            '<div class="stat no"><div class="row"><span class="lab">' + U("no_caps") + '</span><span data-pct="no">–</span></div><div class="bar"><i class="fill" data-fill="no"></i></div></div>' +
             '<div class="vote-count" data-votecount></div>' +
-            '<div class="vote-thanks">Danke! Deine Stimme zählt für Heilbronn.</div>' +
+            '<div class="vote-thanks">' + U("thanks") + '</div>' +
           '</div>' +
         '</div>' +
 
-        '<a class="btn applink-big" href="./">Mehr aus Heilbronn in der App →</a>' +
-        '<div class="reader-disclaimer">Demo-Inhalt im Stil der Heilbronner Stimme · KI-Zusammenfassung automatisch erzeugt</div>';
+        '<a class="btn applink-big" href="./">' + U("app_big") + '</a>' +
+        '<div class="reader-disclaimer">' + U("disclaimer") + '</div>';
+
+      // preserve vote state across a language switch
+      if (voted) {
+        $("#voteActions").style.display = "none";
+        $("#voteResult").hidden = false;
+        if (lastRes) applyResult(lastRes, lastMode);
+      }
     }
 
     function setLoading() {
       var r = $("#voteResult");
       r.querySelector('[data-pct="yes"]').textContent = "…";
       r.querySelector('[data-pct="no"]').textContent = "…";
-      r.querySelector("[data-votecount]").innerHTML = '<span class="live-dot"></span>Live-Ergebnisse werden geladen…';
+      r.querySelector("[data-votecount]").innerHTML = '<span class="live-dot"></span>' + U("live_loading");
     }
 
     function applyResult(res, mode) {
+      lastRes = res; lastMode = mode;
       var r = $("#voteResult");
       var yes = res.yes || 0, no = res.no || 0, total = yes + no;
       var yp = total ? Math.round(yes / total * 100) : 0, np = total ? 100 - yp : 0;
@@ -132,9 +178,9 @@
       r.querySelector('[data-fill="yes"]').style.width = yp + "%";
       r.querySelector('[data-fill="no"]').style.width = np + "%";
       var vc = r.querySelector("[data-votecount]");
-      if (mode === "live") vc.innerHTML = '<span class="live-dot"></span><span class="live">live aus Heilbronn</span> · ' + total + (total === 1 ? " Stimme" : " Stimmen");
-      else if (mode === "error") vc.innerHTML = '<span style="color:var(--muted)">Live momentan nicht erreichbar</span> · Beispielwerte';
-      else vc.textContent = "Beispielverteilung · richte Supabase ein für echte Live-Stimmen";
+      if (mode === "live") vc.innerHTML = '<span class="live-dot"></span><span class="live">' + U("live_label") + '</span> · ' + total + ' ' + (total === 1 ? U("stimme") : U("stimmen"));
+      else if (mode === "error") vc.innerHTML = '<span style="color:var(--muted)">' + U("live_off") + '</span> · ' + U("example");
+      else vc.textContent = U("example_dist");
     }
 
     function vote(choice) {
@@ -160,7 +206,7 @@
     document.addEventListener("click", function (e) {
       var el;
       if ((el = e.target.closest("[data-vote]"))) { vote(el.dataset.vote); return; }
-      if ((el = e.target.closest("[data-lang]"))) { lang = el.dataset.lang; $("#digestWrap").innerHTML = digestHtml(); return; }
+      if ((el = e.target.closest("[data-lang]"))) { if (el.dataset.lang !== lang) { lang = el.dataset.lang; render(); } return; }
     });
   })();
   </script>
