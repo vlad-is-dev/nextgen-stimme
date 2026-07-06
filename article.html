@@ -56,6 +56,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/data.js"></script>
   <script src="js/articles.js"></script>
+  <script src="js/covers.js"></script>
   <script src="js/config.js"></script>
   <script src="js/live.js"></script>
   <script>
@@ -108,6 +109,7 @@
     function CAT() { return EN() ? (NGS.topic(a.topic).labelEn || a.cat).toUpperCase() : a.cat; }
 
     NGS.Live.init();
+    if (NGS.Live.logScan) NGS.Live.logScan(a.id);
     render();
 
     function digestHtml() {
@@ -126,7 +128,7 @@
       $("#appLink").textContent = U("applink");
       var grad = NGS.topic(a.topic).grad;
       $("#art").innerHTML =
-        '<div class="reader-hero" style="background:' + grad + '"><div class="rh-top"><span class="ac-cat">' + esc(CAT()) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div></div>' +
+        '<div class="reader-hero" style="background:' + grad + '">' + (NGS.coverArt ? NGS.coverArt(a) : '') + '<div class="rh-top"><span class="ac-cat">' + esc(CAT()) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div></div>' +
         '<h1 class="reader-title">' + esc(T()) + '</h1>' +
         '<div class="reader-meta"><span>' + esc(a.date) + '</span><span>·</span><span>' + a.read + ' ' + U("read_min") + '</span></div>' +
         '<p class="reader-dek">' + esc(D()) + '</p>' +

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0B1A40" />
+<title>NeXtGen Stimme — Live Board</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{--navy:#0B1A40;--blue:#2456FF;--lime:#C5E94A;--muted:#9FB0D8;--card:#12224F;--hair:#20335f}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;min-height:100vh;
+    background:radial-gradient(1200px 700px at 10% -10%,#16265A 0%,transparent 55%),
+               radial-gradient(1000px 700px at 110% 10%,#1a2e6b 0%,transparent 55%),var(--navy);
+    padding:clamp(18px,3vw,44px)}
+  .disp{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800}
+  .top{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:clamp(18px,3vw,34px)}
+  .wm{font-size:clamp(24px,3vw,40px);font-weight:800;font-family:'Bricolage Grotesque',sans-serif;line-height:1}
+  .wm .x{color:var(--blue)}
+  .sub{color:var(--muted);font-size:clamp(12px,1.3vw,16px);margin-top:6px;letter-spacing:.02em}
+  .live{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:clamp(12px,1.3vw,15px);
+    background:rgba(197,233,74,.14);color:var(--lime);padding:8px 14px;border-radius:999px}
+  .live .d{width:9px;height:9px;border-radius:50%;background:var(--lime);animation:pulse 1.3s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(197,233,74,.6)}100%{box-shadow:0 0 0 12px rgba(197,233,74,0)}}
+
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.6vw,22px);margin-bottom:clamp(18px,3vw,34px)}
+  .kpi{background:var(--card);border:1px solid var(--hair);border-radius:22px;padding:clamp(16px,2vw,28px)}
+  .kpi .l{color:var(--muted);font-size:clamp(11px,1.2vw,15px);font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+  .kpi .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(40px,7vw,104px);line-height:1;margin-top:6px}
+  .kpi.accent .n{color:var(--lime)}
+  .kpi .n small{font-size:.32em;color:var(--muted);font-weight:700;letter-spacing:.02em}
+
+  .cols{display:grid;grid-template-columns:1fr;gap:clamp(16px,2vw,26px)}
+  @media(min-width:900px){.cols{grid-template-columns:1.4fr 1fr}}
+  .panel{background:var(--card);border:1px solid var(--hair);border-radius:22px;padding:clamp(16px,2vw,26px)}
+  .panel h2{font-size:clamp(15px,1.7vw,22px);font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .rows{display:flex;flex-direction:column;gap:clamp(10px,1.3vw,16px)}
+  .row .rh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:7px}
+  .row .t{font-weight:700;font-size:clamp(13px,1.35vw,18px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .v{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(15px,1.6vw,22px);color:var(--lime);flex:none}
+  .bar{height:clamp(9px,1vw,14px);background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2456FF,#C5E94A);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .cat{font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .empty{color:var(--muted);font-size:14px;padding:22px 0;text-align:center}
+  .foot{margin-top:clamp(16px,2.5vw,30px);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .foot a{color:var(--blue);text-decoration:none;font-weight:700}
+  .warn{background:rgba(255,90,95,.12);border:1px solid rgba(255,90,95,.3);color:#FFC7C9;border-radius:16px;padding:14px 18px;font-size:14px;margin-bottom:20px;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <div class="wm">Ne<span class="x">X</span>tGen Stimme — <span style="color:var(--lime)">Live</span></div>
+      <div class="sub">Echtzeit-Statistik der QR-Aktion in Heilbronn · <span id="clock">—</span></div>
+    </div>
+    <div class="live"><span class="d"></span> LIVE</div>
+  </div>
+
+  <div id="warn"></div>
+
+  <div class="kpis">
+    <div class="kpi accent"><div class="l">QR-Scans gesamt</div><div class="n" id="kScans">0</div></div>
+    <div class="kpi"><div class="l">Stories gescannt</div><div class="n" id="kStories">0<small> / 12</small></div></div>
+    <div class="kpi"><div class="l">Pulse-Stimmen</div><div class="n" id="kVotes">0</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h2>📲 Scans pro Story</h2>
+      <div class="rows" id="scanRows"><div class="empty">Noch keine Scans — häng die QR-Codes auf und leg los.</div></div>
+    </div>
+    <div class="panel">
+      <h2>🗳️ Pulse-Abstimmungen</h2>
+      <div class="rows" id="voteRows"><div class="empty">Noch keine Stimmen.</div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Aktualisiert automatisch in Echtzeit (Supabase).</span>
+    <span><a href="present.html">← QR-Codes</a> · <a href="./">App öffnen</a></span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js"></script>
+  <script src="js/articles.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/live.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    function $(s) { return document.querySelector(s); }
+    function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+    // article id -> label
+    var LABEL = { app: "Ganze App" };
+    NGS.ARTICLES.forEach(function (a) { LABEL[a.id] = a.title; });
+    var ARTORDER = NGS.ARTICLES.map(function (a) { return a.id; });
+
+    function clock() { var d = new Date(); $("#clock").textContent = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit", second: "2-digit" }); }
+    setInterval(clock, 1000); clock();
+
+    NGS.Live.init();
+    if (!NGS.Live.isConfigured()) {
+      $("#warn").innerHTML = '<div class="warn">Supabase ist nicht konfiguriert (js/config.js). Das Board zeigt Live-Daten, sobald die Zugangsdaten gesetzt sind.</div>';
+      return;
+    }
+
+    function renderScans(rows) {
+      rows = (rows || []).filter(function (r) { return (r.scans || 0) > 0; });
+      var total = rows.reduce(function (s, r) { return s + (r.scans || 0); }, 0);
+      var stories = rows.filter(function (r) { return r.article_id !== "app"; }).length;
+      $("#kScans").textContent = total;
+      $("#kStories").innerHTML = stories + '<small> / 12</small>';
+      var box = $("#scanRows");
+      if (!rows.length) { box.innerHTML = '<div class="empty">Noch keine Scans — häng die QR-Codes auf und leg los.</div>'; return; }
+      rows.sort(function (a, b) { return (b.scans || 0) - (a.scans || 0); });
+      var max = rows[0].scans || 1;
+      box.innerHTML = rows.map(function (r) {
+        var name = LABEL[r.article_id] || r.article_id;
+        var w = Math.max(4, Math.round((r.scans / max) * 100));
+        return '<div class="row"><div class="rh"><div class="t">' + esc(name) + '</div><div class="v">' + r.scans + '</div></div><div class="bar"><i style="width:' + w + '%"></i></div></div>';
+      }).join("");
+    }
+
+    function renderVotes(rows) {
+      rows = rows || [];
+      // group art_* and hn_card_* -> friendly buckets
+      var totalVotes = 0, byCard = {};
+      rows.forEach(function (r) {
+        var y = r.yes || 0, n = r.no || 0; totalVotes += y + n;
+        byCard[r.card_id] = { yes: y, no: n, total: y + n };
+      });
+      $("#kVotes").textContent = totalVotes;
+      var box = $("#voteRows");
+      var keys = Object.keys(byCard).filter(function (k) { return byCard[k].total > 0; });
+      if (!keys.length) { box.innerHTML = '<div class="empty">Noch keine Stimmen.</div>'; return; }
+      keys.sort(function (a, b) { return byCard[b].total - byCard[a].total; });
+      box.innerHTML = keys.map(function (k) {
+        var c = byCard[k];
+        var yp = c.total ? Math.round(c.yes / c.total * 100) : 0;
+        var label = cardLabel(k);
+        return '<div class="row"><div class="rh"><div class="t">' + esc(label) + '</div><div class="v">' + yp + '% JA</div></div>' +
+          '<div class="bar"><i style="width:' + yp + '%"></i></div>' +
+          '<div class="cat" style="margin-top:6px">' + c.total + ' Stimmen · ' + c.yes + ' JA / ' + c.no + ' NEIN</div></div>';
+      }).join("");
+    }
+
+    function cardLabel(cardId) {
+      if (cardId.indexOf("art_") === 0) {
+        var id = cardId.slice(4);
+        return (LABEL[id] || id) + " — Gut für Heilbronn?";
+      }
+      if (cardId.indexOf("hn_card_") === 0) {
+        var idx = parseInt(cardId.slice(8), 10);
+        var c = NGS.CARDS[idx];
+        return c ? c.title : ("Pulse-Frage " + (idx + 1));
+      }
+      return cardId;
+    }
+
+    function refresh() {
+      NGS.Live.fetchScans().then(renderScans).catch(function () {});
+      NGS.Live.fetchVotes().then(renderVotes).catch(function () {});
+    }
+
+    refresh();
+    NGS.Live.subscribeScans(renderScans);
+    NGS.Live.subscribeVotesAll(renderVotes);
+    setInterval(refresh, 15000); // safety refresh in case a realtime event is missed
+  })();
+  </script>
+</body>
+</html>

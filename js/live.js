@@ -43,5 +43,47 @@ NGS.Live = (function () {
 
   function unsubscribe(ch) { if (ch && client) try { client.removeChannel(ch); } catch (e) {} }
 
-  return { init: init, castVote: castVote, subscribe: subscribe, unsubscribe: unsubscribe, isConfigured: function () { return configured; } };
+  /* ---- QR scan analytics (table qr_scans + RPC bump_scan) ---- */
+  function logScan(id) {
+    if (!configured) return Promise.resolve(null);
+    return client.rpc("bump_scan", { p_id: id }).then(function (res) {
+      if (res.error) throw res.error;
+      return res.data;
+    });
+  }
+  function fetchScans() {
+    if (!configured) return Promise.resolve([]);
+    return client.from("qr_scans").select("article_id,scans,last_seen").then(function (res) {
+      if (res.error) throw res.error;
+      return res.data || [];
+    });
+  }
+  function subscribeScans(cb) {
+    if (!configured) return null;
+    return client.channel("qr_scans_all")
+      .on("postgres_changes", { event: "*", schema: "public", table: "qr_scans" },
+        function () { fetchScans().then(cb).catch(function () {}); })
+      .subscribe();
+  }
+
+  /* ---- Pulse vote totals (table pulse_votes) — used by the live board ---- */
+  function fetchVotes() {
+    if (!configured) return Promise.resolve([]);
+    return client.from("pulse_votes").select("card_id,yes,no").then(function (res) {
+      if (res.error) throw res.error;
+      return res.data || [];
+    });
+  }
+  function subscribeVotesAll(cb) {
+    if (!configured) return null;
+    return client.channel("pulse_all")
+      .on("postgres_changes", { event: "*", schema: "public", table: "pulse_votes" },
+        function () { fetchVotes().then(cb).catch(function () {}); })
+      .subscribe();
+  }
+
+  return { init: init, castVote: castVote, subscribe: subscribe, unsubscribe: unsubscribe,
+    logScan: logScan, fetchScans: fetchScans, subscribeScans: subscribeScans,
+    fetchVotes: fetchVotes, subscribeVotesAll: subscribeVotesAll,
+    isConfigured: function () { return configured; } };
 })();

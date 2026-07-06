@@ -173,6 +173,7 @@
     var saved = state.saved[a.id] ? " on" : "";
     return '<article class="article-card' + (feature ? ' feature' : '') + '" data-article="' + a.id + '">' +
       '<div class="ac-cover" style="background:' + grad + '">' +
+        (NGS.coverArt ? NGS.coverArt(a) : '') +
         '<span class="ac-cat">' + esc(catLabel(a)) + '</span>' +
         (a.premium ? '<span class="ac-prem">ST+</span>' : '') +
       '</div>' +
@@ -385,6 +386,7 @@
     $("#articleView").innerHTML =
       '<button class="reader-back" data-go="feed"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>' + tr("back_feed") + '</button>' +
       '<div class="reader-hero" style="background:' + grad + '">' +
+        (NGS.coverArt ? NGS.coverArt(a) : '') +
         '<div class="rh-top"><span class="ac-cat">' + esc(catLabel(a)) + '</span>' + (a.premium ? '<span class="ac-prem">ST+</span>' : '') + '</div>' +
       '</div>' +
       '<h1 class="reader-title">' + esc(aTitle(a)) + '</h1>' +
@@ -724,6 +726,10 @@
 
   /* ---------------- init ---------------- */
   NGS.Live.init();
+  try {
+    var _src = new URLSearchParams(location.search).get("s");
+    if (_src && NGS.Live.logScan) NGS.Live.logScan(_src === "app" ? "app" : _src);
+  } catch (e) {}
   applyI18n();
   setPoints(NGS.START_POINTS);
   go("landing");
