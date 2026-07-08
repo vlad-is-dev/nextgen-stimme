@@ -12,6 +12,39 @@ window.NGS = window.NGS || {};
 
 NGS.ARTICLES = [
   {
+    id: "a13", topic: "campus", cat: "CAMPUS", date: "07. Jul", read: 6, premium: true,
+    title: "Campus Founders: Wo aus Studierenden in Heilbronn Gründer:innen werden",
+    titleEn: "Campus Founders: where Heilbronn students become founders",
+    dek: "Mitten auf dem Bildungscampus baut ein Gründerzentrum ein ganzes Startup-Ökosystem – mit Coaching, Kapital und Community. Was das für junge Leute in Heilbronn heißt.",
+    dekEn: "Right on the Bildungscampus, a founders' hub is building a whole startup ecosystem — with coaching, capital and community. Here's what that means for young people in Heilbronn.",
+    body: [
+      "Gleich neben den Hörsälen auf dem Bildungscampus liegt ein Ort, an dem aus Geschäftsideen echte Unternehmen werden: die Campus Founders. Das Gründer- und Innovationszentrum ist 2018 gestartet und wird von der Dieter Schwarz Stiftung getragen. Sein Ziel ist es, Heilbronn zu einem Hotspot für Unternehmertum zu machen – und richtet sich damit genau an junge Menschen, die nach dem Studium nicht erst nach Berlin oder München ziehen wollen, um etwas aufzubauen.",
+      "Das Angebot reicht weit über gute Ratschläge hinaus. Es beginnt bei hochschulübergreifenden Kursen, geht über das Coaching von Gründungsinteressierten bis hin zu strukturierten Inkubator- und Acceleratorprogrammen. Teams bekommen praktische Erfahrung, erprobte Methoden, einen Pool aus Mentor:innen und ein internationales Netzwerk an einem einzigen Ort. Viele der Programme drehen sich inzwischen um Künstliche Intelligenz – ein Schwerpunkt, der gut zum wachsenden KI-Standort Heilbronn passt.",
+      "Herzstück ist GRAVITY, das neue Zuhause der Campus Founders auf dem Campus. Es versteht sich ausdrücklich nicht als klassischer Coworking-Space, sondern als Treffpunkt: mit Lounge, Community-Events, modernen Arbeitsplätzen und einem ständigen Austausch zwischen Gründer:innen, Studierenden, Investor:innen und Unternehmen. Eine Mitgliedschaft – für die man sich bewirbt – öffnet die Tür in diese Community.",
+      "Auch beim Geld hört die Unterstützung nicht auf. Über ein eigenes Venture Studio können frühe Teams als Pre-Seed-Investor begleitet werden, unter anderem mit Wandeldarlehen. So kann eine Idee ihr erstes Kapital einsammeln, ohne dass die Gründer:innen die Region verlassen müssen.",
+      "Die Zahlen zeigen, wie lebendig das Ökosystem ist: Rund 300 Startups sind in der Community aktiv, Dutzende durchlaufen jedes Jahr die Programme. Aus dem Umfeld sind bereits Teams hervorgegangen, die Kapital eingesammelt und sich international behauptet haben. Formate wie Hackathons und die Corporate Campus Challenge bringen Studierende und Firmen für ein Wochenende zusammen, um gemeinsam an echten Prototypen zu bauen.",
+      "Für Studierende in Heilbronn heißt das: Der kürzeste Weg von der Idee zum ersten Kund:innen oder Investor führt über den Campus – nicht quer durch die Republik. Neugierig? Ein Blick bei GRAVITY auf dem Bildungscampus lohnt sich."
+    ],
+    bodyEn: [
+      "Right next to the lecture halls on the Bildungscampus sits a place where business ideas turn into real companies: Campus Founders. This founders' and innovation hub started in 2018 and is backed by the Dieter Schwarz Stiftung. Its goal is to make Heilbronn a hotspot for entrepreneurship — and it is aimed squarely at young people who don't want to move to Berlin or Munich after their studies just to build something.",
+      "The offer goes far beyond good advice. It starts with cross-university courses, runs through coaching for aspiring founders, and reaches all the way to structured incubator and accelerator programs. Teams get hands-on experience, proven methods, a pool of mentors and an international network in one place. Many of the programs now revolve around artificial intelligence — a focus that fits Heilbronn's growing AI scene well.",
+      "At the centre is GRAVITY, the Campus Founders' new home on campus. It sees itself explicitly not as a classic coworking space but as a meeting point: a lounge, community events, modern workspaces and a constant exchange between founders, students, investors and companies. A membership — which you apply for — opens the door into that community.",
+      "The support doesn't stop at money either. Through its own venture studio, early teams can be backed as a pre-seed investor, including via convertible loans. That way an idea can raise its first capital without the founders having to leave the region.",
+      "The numbers show how alive the ecosystem is: around 300 startups are active in the community, and dozens run through the programs every year. Teams from this environment have already raised capital and competed internationally. Formats like hackathons and the Corporate Campus Challenge bring students and companies together for a weekend to build real prototypes side by side.",
+      "For students in Heilbronn, that means the shortest path from idea to first customer or investor runs across campus — not across the country. Curious? A visit to GRAVITY on the Bildungscampus is worth it."
+    ],
+    ai: [
+      "Die Campus Founders sind ein Gründer- und Innovationszentrum auf dem Bildungscampus Heilbronn, gestartet 2018.",
+      "Sie bieten Coaching, Accelerator- und Inkubatorprogramme, Coworking im Hub GRAVITY und Pre-Seed-Kapital über ein Venture Studio.",
+      "Ziel ist, junge Talente in der Region zu halten und Heilbronn als Startup-Standort mit KI-Fokus zu stärken."
+    ],
+    aiEn: [
+      "Campus Founders is a founders' and innovation hub on Heilbronn's Bildungscampus, started in 2018.",
+      "It offers coaching, accelerator and incubator programs, coworking at the GRAVITY hub and pre-seed capital via a venture studio.",
+      "The goal: keep young talent in the region and grow Heilbronn as an AI-focused startup location."
+    ]
+  },
+  {
     id: "a1", topic: "innovation", cat: "INNOVATION", date: "23. Jun", read: 4, premium: true,
     title: "Ipai: Wie Heilbronns KI-Campus die Stadt verändert",
     titleEn: "Ipai: how Heilbronn's AI campus is changing the city",

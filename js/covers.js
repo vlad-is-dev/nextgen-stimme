@@ -22,7 +22,8 @@ window.NGS = window.NGS || {};
     a9: "19191521",  // football fans cheering — public viewing
     a10: "8325706",  // colourful laboratory beakers — experimenta
     a11: "4508751",  // data-center server corridor — Schwarz Digits
-    a12: "8975011"   // ice-hockey player on the rink — Falken
+    a12: "8975011",  // ice-hockey player on the rink — Falken
+    a13: "7651733"   // young team collaborating in an office — Campus Founders
   };
   function photoUrl(id) {
     return "https://images.pexels.com/photos/" + id + "/pexels-photo-" + id +
