@@ -13,6 +13,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/styles.css" />
 <style>
+  /* brand logo image (assets/logo.png) */
+  .brand-logo{display:block;height:38px;width:auto}
+  .landing .brand-logo{height:74px}
   /* top-bar DE/EN language toggle (reuses .seg, tuned for the dark bar) */
   .topbar .seg{background:rgba(255,255,255,.14);border:0}
   .topbar .seg button{color:#fff;opacity:.6;font-weight:700}
@@ -27,8 +30,7 @@
   <!-- TOP BAR -->
   <header class="topbar hidden" id="topbar">
     <div class="brand">
-      <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
-      <div class="tagline">Your city. Your voice.</div>
+      <img class="brand-logo" src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." />
     </div>
     <div class="topbar-right">
       <div class="seg" role="group" aria-label="Language">
@@ -45,8 +47,7 @@
     <section class="screen active" id="screen-landing">
       <div class="landing">
         <div class="brand">
-          <div class="wordmark">Ne<span class="x">X</span>tGen Stimme</div>
-          <div class="tagline">Your city. Your voice.</div>
+          <img class="brand-logo" src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." />
         </div>
         <div class="pin-badge"><span class="ping"></span> <span data-i18n="land_badge">Bildungscampus · NeXtGen-Spot</span></div>
         <div class="landing-hero">

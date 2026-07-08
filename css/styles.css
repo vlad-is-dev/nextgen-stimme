@@ -349,11 +349,13 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .article-card.feature .ac-cover{height:150px;align-items:flex-end}
 .ac-cat{font-size:10px;font-weight:700;letter-spacing:.1em;color:#fff;background:rgba(0,0,0,.24);padding:5px 9px;border-radius:9px}
 .ac-prem{font-size:10px;font-weight:800;letter-spacing:.04em;color:#0B1A40;background:var(--lime);padding:5px 8px;border-radius:9px}
-/* cover illustrations (covers.js) sit behind the category/premium badges */
+/* cover art (covers.js): gradient < svg fallback < photo < scrim < badges */
 .ac-cover{overflow:hidden}
 .cover-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.ac-cover>.ac-cat,.ac-cover>.ac-prem{position:relative;z-index:2}
-.reader-hero .rh-top,.reader-hero .ac-cat,.reader-hero .ac-prem{z-index:2}
+.cover-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border:0}
+.cover-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(11,26,64,0) 45%,rgba(11,26,64,.5))}
+.ac-cover>.ac-cat,.ac-cover>.ac-prem{position:relative;z-index:3}
+.reader-hero .rh-top,.reader-hero .ac-cat,.reader-hero .ac-prem{z-index:3}
 .ac-body{padding:13px 15px 14px}
 .ac-title{font-family:var(--display);font-weight:700;font-size:16px;line-height:1.22;color:var(--navy)}
 .article-card.feature .ac-title{font-size:19px}
