@@ -1,7 +1,3 @@
-# 3 — Полная замена `css/styles.css`
-Фикс Pulse: KI-Zusammenfassung теперь занимает всё свободное место, пустоты снизу нет, кнопка «Weiter» остаётся внизу.
-
-```css
 /* ===========================================================
    NeXtGen Stimme — design system & screens
    Palette: deep Stimme navy + electric NeXtGen blue + pastel
@@ -580,4 +576,3 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .feed-search svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex:0 0 auto}
 .feed-search input{border:0;outline:0;background:none;font-family:var(--body);font-size:14px;color:var(--ink);width:100%}
 .feed-search input::placeholder{color:var(--muted)}
-```
