@@ -18,7 +18,7 @@
     var(--paper);}
   .page{max-width:480px;margin:0 auto;padding:18px 18px 64px;min-height:100dvh}
   .pagebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-top:env(safe-area-inset-top)}
-  .pagebar .brand{display:flex;flex-direction:column;line-height:1}
+  .pagebar .brand{display:flex;flex-direction:column;line-height:1;align-items:flex-start}
   .pagebar .wordmark{font-family:var(--display);font-weight:800;font-size:18px;color:var(--navy)}
   .pagebar .wordmark .x{color:var(--blue)}
   .pagebar .tagline{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-top:3px}
@@ -41,9 +41,9 @@
 <body>
   <div class="page">
     <div class="pagebar">
-      <div class="brand">
-        <img src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." style="height:34px;width:auto;display:block" />
-      </div>
+      <a class="brand" href="./" aria-label="NeXtGen Stimme öffnen">
+        <img src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." style="height:34px;width:auto;max-width:100%;display:block;object-fit:contain" />
+      </a>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="seg" id="langSeg"><button data-lang="de" class="on">DE</button><button data-lang="en">EN</button></div>
         <a class="applink" id="appLink" href="./">Ganze App →</a>

@@ -1,3 +1,7 @@
+# 3 — Полная замена `css/styles.css`
+Фикс Pulse: KI-Zusammenfassung теперь занимает всё свободное место, пустоты снизу нет, кнопка «Weiter» остаётся внизу.
+
+```css
 /* ===========================================================
    NeXtGen Stimme — design system & screens
    Palette: deep Stimme navy + electric NeXtGen blue + pastel
@@ -249,10 +253,9 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
   padding:6px 0 0;display:flex;flex-direction:column;overflow:hidden;
   opacity:0;visibility:hidden;transform:translateY(14px);transition:.4s;
 }
-/* only the AI summary scrolls; vote bars stay on top, Next stays pinned at the bottom */
-.result .ai-box{flex:0 1 auto;min-height:0;overflow-y:auto}
+/* the AI summary fills the free space (and scrolls if long); Next stays pinned at the bottom */
+.result .ai-box{flex:1 1 auto;min-height:0;overflow-y:auto}
 .result>.btn,.result .earned,.result .your-vote,.result .stat,.result .vote-count{flex:0 0 auto}
-.result .earned{margin-top:auto}
 .result.show{opacity:1;visibility:visible;transform:none}
 .result .your-vote{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px}
 .result .your-vote b{color:var(--navy)}
@@ -577,3 +580,4 @@ h1,h2{font-family:var(--display);letter-spacing:-.025em;color:var(--navy);margin
 .feed-search svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex:0 0 auto}
 .feed-search input{border:0;outline:0;background:none;font-family:var(--body);font-size:14px;color:var(--ink);width:100%}
 .feed-search input::placeholder{color:var(--muted)}
+```

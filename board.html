@@ -53,7 +53,7 @@
 <body>
   <div class="top">
     <div>
-      <div class="wm">Ne<span class="x">X</span>tGen Stimme — <span style="color:var(--lime)">Live</span></div>
+      <img src="assets/logo-light.png" alt="NeXtGen Stimme — Your city. Your voice." style="height:46px;width:auto;max-width:100%;display:block;object-fit:contain" />
       <div class="sub">Echtzeit-Statistik der QR-Aktion in Heilbronn · <span id="clock">—</span></div>
     </div>
     <div class="live"><span class="d"></span> LIVE</div>
@@ -105,6 +105,11 @@
     NGS.Live.init();
     if (!NGS.Live.isConfigured()) {
       $("#warn").innerHTML = '<div class="warn">Supabase ist nicht konfiguriert (js/config.js). Das Board zeigt Live-Daten, sobald die Zugangsdaten gesetzt sind.</div>';
+      return;
+    }
+    if (typeof NGS.Live.fetchScans !== "function" || typeof NGS.Live.logScan !== "function") {
+      $("#warn").innerHTML = '<div class="warn">Veraltete <b>js/live.js</b> auf dem Server: die Scan-Funktionen fehlen. Bitte die neue js/live.js hochladen und die Seite neu laden (Cmd+Shift+R).</div>';
+      console.error("[Board] js/live.js is outdated: logScan/fetchScans missing. Upload the new js/live.js.");
       return;
     }
 

@@ -13,9 +13,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/styles.css" />
 <style>
-  /* brand logo image (assets/logo.png) */
-  .brand-logo{display:block;height:38px;width:auto}
-  .landing .brand-logo{height:74px}
+  /* brand logo — .brand is a flex column, so stop the img from stretching */
+  .brand{align-items:flex-start}
+  .brand-logo{display:block;width:auto;max-width:100%;align-self:flex-start;object-fit:contain}
+  .topbar .brand-logo{height:38px}
+  .topbar .brand{cursor:pointer}          /* logo returns to the feed */
+  .landing .brand-logo{height:76px;max-width:80%}
   /* top-bar DE/EN language toggle (reuses .seg, tuned for the dark bar) */
   .topbar .seg{background:rgba(255,255,255,.14);border:0}
   .topbar .seg button{color:#fff;opacity:.6;font-weight:700}
@@ -29,7 +32,7 @@
 
   <!-- TOP BAR -->
   <header class="topbar hidden" id="topbar">
-    <div class="brand">
+    <div class="brand" data-go="feed" role="button" tabindex="0" aria-label="Zur Startseite">
       <img class="brand-logo" src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." />
     </div>
     <div class="topbar-right">
@@ -47,7 +50,7 @@
     <section class="screen active" id="screen-landing">
       <div class="landing">
         <div class="brand">
-          <img class="brand-logo" src="assets/logo.png" alt="NeXtGen Stimme — Your city. Your voice." />
+          <img class="brand-logo" src="assets/logo-light.png" alt="NeXtGen Stimme — Your city. Your voice." />
         </div>
         <div class="pin-badge"><span class="ping"></span> <span data-i18n="land_badge">Bildungscampus · NeXtGen-Spot</span></div>
         <div class="landing-hero">
