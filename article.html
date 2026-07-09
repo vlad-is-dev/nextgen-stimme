@@ -108,7 +108,11 @@
     function CAT() { return EN() ? (NGS.topic(a.topic).labelEn || a.cat).toUpperCase() : a.cat; }
 
     NGS.Live.init();
-    if (NGS.Live.logScan) NGS.Live.logScan(a.id);
+    if (NGS.Live.logScan) {
+      NGS.Live.logScan(a.id)
+        .then(function (n) { console.log("[Scan] logged", a.id, "->", n); })
+        .catch(function (e) { console.error("[Scan] failed for", a.id, ":", (e && e.message) ? e.message : e); });
+    }
     render();
 
     function digestHtml() {
